@@ -1,3 +1,3 @@
 # HymnsNchords
 
-Edit the below xd file.
+Edit the above xd file.
