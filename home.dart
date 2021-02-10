@@ -62,231 +62,253 @@ class HomePageState extends State<HomePage> {
 
     var height = AppBar().preferredSize.height;
 
-    GlobalKey height_button = GlobalKey();
+    Future<bool> _onBackPressed() {
+      return showDialog(
+        context: (context),
+        builder: (context) => AlertDialog(
+          title: Text("Are you sure?"),
+          content: Text("Do you want to exit the App?"),
+          actions: [
+            GestureDetector(
+              onTap: () => Navigator.of(context).pop(false),
+              child: Text("NO"),
+            ),
+            SizedBox(height: 16),
+            GestureDetector(
+              onTap: () => Navigator.of(context).pop(true),
+              child: Text("YES"),
+            ),
+          ],
+        ),
+      );
+    }
 
     //BIG CODE FROM HERE
-    return MaterialApp(
-      home: SafeArea(
-        top: true,
-        child: Scaffold(
-          primary: true,
-          drawer: SideBar(),
-          appBar: AppBar(
-            backgroundColor: appbarColor,
-            elevation: 0,
-            toolbarHeight: height + 2,
-            centerTitle: true,
-            title: Title(
-              color: Colors.white,
-              child: Text(
-                'HymnsNChords',
-                style: TextStyle(
-                  fontFamily: 'SegoePrint',
-                ),
-              ),
-            ),
-            shadowColor: Colors.black,
-            actions: [
-              Image.asset(
-                'images/homepage/metronome.png',
+    return WillPopScope(
+      onWillPop: _onBackPressed,
+      child: MaterialApp(
+        home: SafeArea(
+          top: true,
+          child: Scaffold(
+            primary: true,
+            drawer: SideBar(),
+            appBar: AppBar(
+              backgroundColor: appbarColor,
+              elevation: 0,
+              toolbarHeight: height + 2,
+              centerTitle: true,
+              title: Title(
                 color: Colors.white,
+                child: Text(
+                  'HymnsNChords',
+                  style: TextStyle(
+                    fontFamily: 'SegoePrint',
+                  ),
+                ),
               ),
-            ],
-          ),
-          body: Container(
-            child: Column(
-              children: <Widget>[
-                Spacer(flex: 1),
-                Expanded(
-                  flex: 2,
-                  child: Container(
-                    alignment: Alignment.center,
-                    width: 100,
-                    child: Text(
-                      'HOME',
-                      textAlign: TextAlign.center,
-                      style: TextStyle(
-                        fontWeight: FontWeight.bold,
-                        color: Colors.yellow[200],
-                      ),
-                    ),
-                    decoration: BoxDecoration(
-                      borderRadius: BorderRadius.circular(8.0),
-                      color: titleBoxColor,
-                      boxShadow: [
-                        BoxShadow(
-                          color: Color.fromRGBO(44, 0, 0, 100),
-                          blurRadius: 15.0,
-                          spreadRadius: 3.0,
-                          offset: Offset(
-                            3.0, //Move to right 10 horizontally
-                            5.0, //Move to bottom 10  vertically
-                          ),
-                        ),
-                      ],
-                    ),
-                  ),
+              shadowColor: Colors.black,
+              actions: [
+                Image.asset(
+                  'images/homepage/metronome.png',
+                  color: Colors.white,
                 ),
-                Spacer(
-                  flex: 2,
-                ),
-                Expanded(
-                  flex: 6,
-                  child: Row(
-                    //1st ROW
-                    children: <Widget>[
-                      Spacer(
-                        flex: 2,
-                      ),
-                      rectangleBoxes(
-                          rectangleBoxColor,
-                          rectangleBoxesIndex,
-                          rectangleBoxesNames,
-                          rectangleBoxesPics,
-                          context,
-                          functions),
-                      Spacer(flex: 1),
-                      rectangleBoxes(
-                          rectangleBoxColor,
-                          rectangleBoxesIndex + 1,
-                          rectangleBoxesNames,
-                          rectangleBoxesPics,
-                          context,
-                          functions),
-                      Spacer(
-                        flex: 2,
-                      ),
-                    ],
-                  ),
-                ),
-                Spacer(
-                  flex: 2,
-                ),
-                Expanded(
-                  flex: 6,
-                  child: Row(
-                    //2nd ROW
-                    children: <Widget>[
-                      Spacer(
-                        flex: 2,
-                      ),
-                      rectangleBoxes(
-                          rectangleBoxColor,
-                          rectangleBoxesIndex + 2,
-                          rectangleBoxesNames,
-                          rectangleBoxesPics,
-                          context,
-                          functions),
-                      Spacer(flex: 1),
-                      rectangleBoxes(
-                          rectangleBoxColor,
-                          rectangleBoxesIndex + 3,
-                          rectangleBoxesNames,
-                          rectangleBoxesPics,
-                          context,
-                          functions),
-                      Spacer(
-                        flex: 2,
-                      ),
-                    ],
-                  ),
-                ),
-                Spacer(
-                  flex: 2,
-                ),
-                Expanded(
-                  flex: 6,
-                  child: Row(
-                    //Third Row
-                    children: <Widget>[
-                      Spacer(
-                        flex: 2,
-                      ),
-                      rectangleBoxes(
-                        rectangleBoxColor,
-                        rectangleBoxesIndex + 4,
-                        rectangleBoxesNames,
-                        rectangleBoxesPics,
-                        context,
-                        functions,
-                      ),
-                      Spacer(
-                        flex: 1,
-                      ),
-                      rectangleBoxes(
-                          rectangleBoxColor,
-                          rectangleBoxesIndex + 5,
-                          rectangleBoxesNames,
-                          rectangleBoxesPics,
-                          context,
-                          functions),
-                      Spacer(
-                        flex: 2,
-                      )
-                    ],
-                  ),
-                ),
-                Spacer(
-                  flex: 3,
-                ),
-                Expanded(
-                  flex: 2,
-                  child: Container(
-                    alignment: Alignment.center,
-                    width: 200,
-                    child: Stack(
-                      alignment: Alignment.center,
-                      children: [
-                        Text(
-                          'Contribute Here',
-                          style: TextStyle(color: Colors.yellow[50]),
-                        ),
-                        MaterialButton(
-                          //  color: Colors.yellow,
-                          minWidth: 170,
-                          onPressed: () {
-                            Navigator.of(context).push(
-                              MaterialPageRoute(
-                                builder: (context) => Contribute(),
-                              ),
-                            );
-                          },
-                        ),
-                      ],
-                    ),
-                    decoration: BoxDecoration(
-                      color: Colors.brown[900],
-                      borderRadius: BorderRadius.circular(8.0),
-                      boxShadow: [
-                        BoxShadow(
-                          color: Colors.black38,
-                          blurRadius: 25.0,
-                          spreadRadius: 6.0,
-                          offset: Offset(
-                            10.0, //Move to right 10 horizontally
-                            10.0, //Move to bottom 10  vertically
-                          ),
-                        ),
-                      ],
-                    ),
-                  ),
-                ),
-                Spacer(
-                  flex: 2,
-                )
               ],
-            ), //Menu
-            decoration: BoxDecoration(
-              gradient: LinearGradient(
-                begin: Alignment.topCenter,
-                end: Alignment
-                    .bottomCenter, // 10% of the width, so there are ten blinds.
-                colors: [
-                  gradientTopColor,
-                  gradientBottomColor,
-                ], // whitish to gray
-                tileMode:
-                    TileMode.repeated, // repeats the gradient over the canvas
+            ),
+            body: Container(
+              child: Column(
+                children: <Widget>[
+                  Spacer(flex: 1),
+                  Expanded(
+                    flex: 2,
+                    child: Container(
+                      alignment: Alignment.center,
+                      width: 100,
+                      child: Text(
+                        'HOME',
+                        textAlign: TextAlign.center,
+                        style: TextStyle(
+                          fontWeight: FontWeight.bold,
+                          color: Colors.yellow[200],
+                        ),
+                      ),
+                      decoration: BoxDecoration(
+                        borderRadius: BorderRadius.circular(8.0),
+                        color: titleBoxColor,
+                        boxShadow: [
+                          BoxShadow(
+                            color: Color.fromRGBO(44, 0, 0, 100),
+                            blurRadius: 15.0,
+                            spreadRadius: 3.0,
+                            offset: Offset(
+                              3.0, //Move to right 10 horizontally
+                              5.0, //Move to bottom 10  vertically
+                            ),
+                          ),
+                        ],
+                      ),
+                    ),
+                  ),
+                  Spacer(
+                    flex: 2,
+                  ),
+                  Expanded(
+                    flex: 6,
+                    child: Row(
+                      //1st ROW
+                      children: <Widget>[
+                        Spacer(
+                          flex: 2,
+                        ),
+                        rectangleBoxes(
+                            rectangleBoxColor,
+                            rectangleBoxesIndex,
+                            rectangleBoxesNames,
+                            rectangleBoxesPics,
+                            context,
+                            functions),
+                        Spacer(flex: 1),
+                        rectangleBoxes(
+                            rectangleBoxColor,
+                            rectangleBoxesIndex + 1,
+                            rectangleBoxesNames,
+                            rectangleBoxesPics,
+                            context,
+                            functions),
+                        Spacer(
+                          flex: 2,
+                        ),
+                      ],
+                    ),
+                  ),
+                  Spacer(
+                    flex: 2,
+                  ),
+                  Expanded(
+                    flex: 6,
+                    child: Row(
+                      //2nd ROW
+                      children: <Widget>[
+                        Spacer(
+                          flex: 2,
+                        ),
+                        rectangleBoxes(
+                            rectangleBoxColor,
+                            rectangleBoxesIndex + 2,
+                            rectangleBoxesNames,
+                            rectangleBoxesPics,
+                            context,
+                            functions),
+                        Spacer(flex: 1),
+                        rectangleBoxes(
+                            rectangleBoxColor,
+                            rectangleBoxesIndex + 3,
+                            rectangleBoxesNames,
+                            rectangleBoxesPics,
+                            context,
+                            functions),
+                        Spacer(
+                          flex: 2,
+                        ),
+                      ],
+                    ),
+                  ),
+                  Spacer(
+                    flex: 2,
+                  ),
+                  Expanded(
+                    flex: 6,
+                    child: Row(
+                      //Third Row
+                      children: <Widget>[
+                        Spacer(
+                          flex: 2,
+                        ),
+                        rectangleBoxes(
+                          rectangleBoxColor,
+                          rectangleBoxesIndex + 4,
+                          rectangleBoxesNames,
+                          rectangleBoxesPics,
+                          context,
+                          functions,
+                        ),
+                        Spacer(
+                          flex: 1,
+                        ),
+                        rectangleBoxes(
+                            rectangleBoxColor,
+                            rectangleBoxesIndex + 5,
+                            rectangleBoxesNames,
+                            rectangleBoxesPics,
+                            context,
+                            functions),
+                        Spacer(
+                          flex: 2,
+                        )
+                      ],
+                    ),
+                  ),
+                  Spacer(
+                    flex: 3,
+                  ),
+                  Expanded(
+                    flex: 2,
+                    child: Container(
+                      alignment: Alignment.center,
+                      width: 200,
+                      child: Stack(
+                        alignment: Alignment.center,
+                        children: [
+                          Text(
+                            'Contribute Here',
+                            style: TextStyle(color: Colors.yellow[50]),
+                          ),
+                          MaterialButton(
+                            //  color: Colors.yellow,
+                            minWidth: 170,
+                            onPressed: () {
+                              Navigator.of(context).push(
+                                MaterialPageRoute(
+                                  builder: (context) => Contribute(),
+                                ),
+                              );
+                            },
+                          ),
+                        ],
+                      ),
+                      decoration: BoxDecoration(
+                        color: Colors.brown[900],
+                        borderRadius: BorderRadius.circular(8.0),
+                        boxShadow: [
+                          BoxShadow(
+                            color: Colors.black38,
+                            blurRadius: 25.0,
+                            spreadRadius: 6.0,
+                            offset: Offset(
+                              10.0, //Move to right 10 horizontally
+                              10.0, //Move to bottom 10  vertically
+                            ),
+                          ),
+                        ],
+                      ),
+                    ),
+                  ),
+                  Spacer(
+                    flex: 2,
+                  )
+                ],
+              ), //Menu
+              decoration: BoxDecoration(
+                gradient: LinearGradient(
+                  begin: Alignment.topCenter,
+                  end: Alignment
+                      .bottomCenter, // 10% of the width, so there are ten blinds.
+                  colors: [
+                    gradientTopColor,
+                    gradientBottomColor,
+                  ], // whitish to gray
+                  tileMode:
+                      TileMode.repeated, // repeats the gradient over the canvas
+                ),
               ),
             ),
           ),

@@ -1,7 +1,9 @@
-import 'package:firebase_database/firebase_database.dart';
-import 'package:flutter/material.dart';
-import 'sidebar.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:flutter/material.dart';
+import 'package:get/get.dart';
+import 'package:here/transpose_controller.dart';
+import 'sidebar.dart';
+import 'hymnpage.dart';
 
 class Hymns extends StatefulWidget {
   final List<String> list = List.generate(10, (index) => 'Text $index');
@@ -20,7 +22,6 @@ class HymnsState extends State<Hymns> {
   final Color gradientBottomColor = Color.fromRGBO(21, 4, 4, 1.0);
 
   final categoryNames = [
-    'Search Results',
     'Entrance',
     'Lord Have Mercy',
     'Gloria',
@@ -31,7 +32,7 @@ class HymnsState extends State<Hymns> {
     'Recessional',
   ];
 
-  List<bool> boolList = [true, true, true, true, true, true, true, true, true];
+  List<bool> boolList = [true, true, true, true, true, true, true, true];
 
   final categoryIndex = 0;
 
@@ -55,7 +56,6 @@ class HymnsState extends State<Hymns> {
   @override
   Widget build(BuildContext context) {
     var categoryFunctions = [
-      'SearchResults',
       'EntranceHymns',
       'LordHaveMercy',
       'Glory',
@@ -119,13 +119,15 @@ class HymnsState extends State<Hymns> {
                       flex: 4,
                       child: Row(
                         children: [
+                          Spacer(
+                            flex: 1,
+                          ),
                           Expanded(
-                            flex: 11,
+                            flex: 12,
                             child: Container(
                                 padding: EdgeInsets.only(
                                   left: 12.0,
                                 ),
-                                margin: EdgeInsets.fromLTRB(16.0, 0, 8.0, 8.0),
                                 decoration: BoxDecoration(
                                   color: Colors.white,
                                   borderRadius: BorderRadius.circular(8.0),
@@ -137,6 +139,9 @@ class HymnsState extends State<Hymns> {
                                     hintStyle: TextStyle(color: Colors.black54),
                                   ),
                                 )),
+                          ),
+                          Spacer(
+                            flex: 1,
                           ),
                           Expanded(
                             flex: 3,
@@ -155,8 +160,6 @@ class HymnsState extends State<Hymns> {
                                       ),
                                     ),
                                   ),
-                                  margin:
-                                      EdgeInsets.fromLTRB(8.0, 0, 16.0, 8.0),
                                   decoration: BoxDecoration(
                                     color: Colors.red[50],
                                     borderRadius: BorderRadius.circular(8.0),
@@ -164,6 +167,9 @@ class HymnsState extends State<Hymns> {
                                 ),
                               ],
                             ),
+                          ),
+                          Spacer(
+                            flex: 1,
                           ),
                         ],
                       ),
@@ -194,6 +200,8 @@ class HymnsState extends State<Hymns> {
                                             color: Colors.red,
                                           ),
                                           Container(
+                                            alignment: Alignment.center,
+                                            // color: Colors.green,
                                             height: 60,
                                             //margin: EdgeInsets.all(0.6),
                                             padding: EdgeInsets.all(1.0),
@@ -201,32 +209,47 @@ class HymnsState extends State<Hymns> {
                                                 ? buttonColor
                                                 : Color.fromRGBO(
                                                     108, 28, 29, 1.0),
+                                            child: Stack(
+                                              fit: StackFit.expand,
+                                              children: [
+                                                Center(
+                                                  child: boolList[index]
+                                                      ? Text(
+                                                          categoryNames[index],
+                                                          textAlign:
+                                                              TextAlign.center,
+                                                        )
+                                                      : Text(
+                                                          categoryNames[index],
+                                                          textAlign:
+                                                              TextAlign.center,
+                                                          style: TextStyle(
+                                                              color:
+                                                                  Colors.white),
+                                                        ),
+                                                ),
+                                                MaterialButton(
+                                                  onPressed: () {
+                                                    if (currentSelectedIndex >=
+                                                        0)
+                                                      boolList[
+                                                              currentSelectedIndex] =
+                                                          true;
+
+                                                    executefunction(
+                                                        index,
+                                                        categoryFunctions[
+                                                            index]);
+                                                    boolList[index] = false;
+                                                    setState(() {});
+                                                    currentSelectedIndex =
+                                                        index;
+                                                  },
+                                                ),
+                                              ],
+                                            ),
                                           ),
                                         ],
-                                      ),
-                                      boolList[index]
-                                          ? Text(
-                                              categoryNames[index],
-                                              textAlign: TextAlign.center,
-                                            )
-                                          : Text(
-                                              categoryNames[index],
-                                              textAlign: TextAlign.center,
-                                              style: TextStyle(
-                                                  color: Colors.white),
-                                            ),
-                                      MaterialButton(
-                                        onPressed: () {
-                                          if (currentSelectedIndex >= 0)
-                                            boolList[currentSelectedIndex] =
-                                                true;
-
-                                          executefunction(
-                                              index, categoryFunctions[index]);
-                                          boolList[index] = false;
-                                          setState(() {});
-                                          currentSelectedIndex = index;
-                                        },
                                       ),
                                     ],
                                   );
@@ -261,9 +284,9 @@ class HymnsState extends State<Hymns> {
   Container hymnCategorySelectOp(var hymnList) {
     return Container(
       child: StreamBuilder(
-        stream: Firestore.instance
+        stream: FirebaseFirestore.instance
             .collection('Hymns')
-            .document(hymnList)
+            .doc(hymnList)
             .collection('HymnNames')
             .snapshots(),
         builder: (context, snapshot) {
@@ -281,21 +304,54 @@ class HymnsState extends State<Hymns> {
                 alignment: Alignment.center,
                 children: [
                   Column(
+                    crossAxisAlignment: CrossAxisAlignment.center,
+                    mainAxisAlignment: MainAxisAlignment.center,
                     children: [
                       Container(
+                        alignment: Alignment.center,
                         height: 50,
                         color: Color.fromRGBO(60, 16, 15, 1.0),
+                        child: Stack(
+                          alignment: Alignment.center,
+                          fit: StackFit.expand,
+                          children: [
+                            Center(
+                              child: Text(
+                                snapshot.data.documents[index]['name']
+                                    .toString(),
+                                textAlign: TextAlign.center,
+                                style: TextStyle(color: Colors.white),
+                              ),
+                            ),
+                            MaterialButton(
+                              //color: Colors.green,
+                              onPressed: () {
+                                Get.create(() => TransposeController());
+                                Navigator.of(context).push(
+                                  MaterialPageRoute(
+                                    builder: (context) => HymnPage(
+                                      title: snapshot
+                                          .data.documents[index]['name']
+                                          .toString(),
+                                      chords: snapshot
+                                          .data.documents[index]['lyrics']
+                                          .toString(),
+                                      scale: snapshot
+                                          .data.documents[index]['scale']
+                                          .toString(),
+                                    ),
+                                  ),
+                                );
+                              },
+                            ),
+                          ],
+                        ),
                       ),
                       Divider(
                         height: 0.6,
                         color: Colors.white54,
                       )
                     ],
-                  ),
-                  Text(
-                    snapshot.data.documents[index]['name'].toString(),
-                    textAlign: TextAlign.center,
-                    style: TextStyle(color: Colors.white),
                   ),
                 ],
               );
